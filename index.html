@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Good Morning</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Caveat:wght@500;600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dawn-deep:#2B3A67;
+    --dawn-mid:#F2A369;
+    --dawn-glow:#FBD48A;
+    --peach:#FDE9D9;
+    --blush:#F2A6B3;
+    --cream:#FFF9F0;
+    --ink:#3A2E3F;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0;
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;
+    font-family:'Poppins', sans-serif;
+    -webkit-text-size-adjust:100%;
+  }
+
+  /* ---- Sunrise sky ---- */
+  #sky{
+    position:fixed; inset:0;
+    height:100vh;
+    height:100dvh;
+    background:linear-gradient(180deg, var(--dawn-deep) 0%, #6C6A94 35%, var(--dawn-mid) 70%, var(--dawn-glow) 100%);
+    animation:sunrise 4.5s ease-in-out forwards;
+    overflow:hidden;
+  }
+
+  @keyframes sunrise{
+    0%{ filter:brightness(0.55) saturate(0.7); }
+    100%{ filter:brightness(1) saturate(1); }
+  }
+
+  .sun{
+    position:absolute;
+    left:50%;
+    bottom:-90px;
+    width:180px; height:180px;
+    margin-left:-90px;
+    border-radius:50%;
+    background:radial-gradient(circle at 40% 35%, #FFF4D6, var(--dawn-glow) 60%, var(--dawn-mid) 100%);
+    box-shadow:0 0 90px 25px rgba(253,212,138,0.55);
+    animation:rise 4.5s cubic-bezier(.3,.6,.3,1) forwards;
+  }
+  @keyframes rise{
+    0%{ transform:translateY(60px); opacity:0.4; }
+    100%{ transform:translateY(-210px); opacity:1; }
+  }
+
+  .ray{
+    position:absolute;
+    left:50%; bottom:-40px;
+    width:2px; height:260px;
+    background:linear-gradient(180deg, rgba(255,244,214,0.35), transparent);
+    transform-origin:bottom center;
+    opacity:0;
+    animation:rayFade 4.5s ease forwards;
+  }
+  @keyframes rayFade{
+    0%,50%{ opacity:0; }
+    100%{ opacity:0.6; }
+  }
+
+  .bird{
+    position:absolute;
+    width:18px; height:8px;
+    opacity:0;
+    animation:flyIn 3s ease forwards, flap 1s ease-in-out infinite;
+  }
+  .bird svg{ width:100%; height:100%; fill:none; stroke:#2B3A67; stroke-width:1.6; stroke-linecap:round; }
+  @keyframes flyIn{ to{ opacity:0.55; } }
+  @keyframes flap{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+
+  .cloud{
+    position:absolute;
+    background:rgba(255,255,255,0.5);
+    border-radius:50px;
+    filter:blur(1px);
+    opacity:0;
+    animation:cloudIn 4s ease forwards;
+  }
+  @keyframes cloudIn{ to{ opacity:0.65; } }
+
+  #scene{
+    position:relative;
+    height:100vh;
+    height:100dvh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+    padding:0 20px;
+  }
+
+  .caption{
+    position:absolute;
+    top:8%;
+    left:0; right:0;
+    text-align:center;
+    color:#2B2140;
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:5rem;
+    letter-spacing:1px;
+    text-shadow:0 2px 22px rgba(255,255,255,0.55);
+    opacity:0;
+    animation:capIn 1.4s ease forwards;
+    animation-delay:2.2s;
+  }
+  @media (max-width:480px){
+    .caption{ font-size:3rem; padding:0 16px; }
+  }
+  @keyframes capIn{ from{ opacity:0; transform:translateY(-6px);} to{ opacity:0.85; transform:translateY(0);} }
+
+  #envelope-wrap{
+    cursor:pointer;
+    opacity:0;
+    animation:envIn 1.2s ease forwards;
+    animation-delay:2.6s;
+    transition:transform 0.4s ease;
+  }
+  #envelope-wrap:hover{ transform:translateY(-4px); }
+  #envelope-wrap.hidden{ display:none; }
+  @keyframes envIn{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+
+  .envelope{ position:relative; width:260px; height:170px; }
+
+  .env-body{
+    position:absolute; inset:0;
+    background:linear-gradient(160deg, #FFF4E3, var(--cream));
+    border-radius:6px;
+    box-shadow:0 20px 55px rgba(60,40,40,0.25);
+  }
+  .env-flap{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    clip-path:polygon(0 0, 50% 55%, 100% 0);
+    background:linear-gradient(160deg, #FCE7C8, #FFF4E3);
+    border-radius:6px 6px 0 0;
+    transform-origin:top;
+    transition:transform 0.9s cubic-bezier(.6,-0.2,.35,1.4);
+    z-index:3;
+  }
+  .env-shade{
+    position:absolute; bottom:0; left:0; width:100%; height:70%;
+    clip-path:polygon(0 100%, 50% 30%, 100% 100%);
+    background:rgba(120,80,60,0.05);
+    z-index:1;
+  }
+  .seal{
+    position:absolute; top:50%; left:50%;
+    width:46px; height:46px;
+    background:radial-gradient(circle at 35% 30%, #F3899C, var(--blush));
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    z-index:4;
+    transition:opacity 0.5s ease, transform 0.5s ease;
+  }
+  .seal svg{ width:22px; height:22px; fill:var(--cream); }
+
+  .tap-hint{
+    position:absolute; bottom:-42px; left:0; right:0;
+    text-align:center; color:var(--ink);
+    font-size:0.8rem; letter-spacing:2px; text-transform:uppercase;
+    opacity:0.5;
+    animation:pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:.3;} 50%{opacity:.7;} }
+
+  .envelope.open .env-flap{ transform:rotateX(180deg); }
+  .envelope.open .seal{ opacity:0; transform:translate(-50%,-50%) scale(0.4); }
+
+  /* ---- Letter ---- */
+  #letter{
+    position:fixed; inset:0;
+    height:100vh;
+    height:100dvh;
+    background:linear-gradient(180deg, var(--cream), var(--peach));
+    display:flex; justify-content:center; align-items:flex-start;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:64px 24px calc(140px + env(safe-area-inset-bottom));
+    padding-top:calc(64px + env(safe-area-inset-top));
+    transform:translateY(100%);
+    transition:transform 0.9s cubic-bezier(.2,.9,.25,1);
+    z-index:10;
+  }
+  #letter.visible{ transform:translateY(0); }
+
+  .paper{ max-width:560px; width:100%; color:var(--ink); }
+
+  .paper .greeting{
+    font-family:'Cormorant Garamond', serif;
+    font-size:2.2rem; font-weight:600;
+    margin-bottom:0.4rem;
+  }
+
+  .paper .line{
+    font-family:'Caveat', cursive;
+    font-size:1.55rem; line-height:1.55;
+    margin:0.35rem 0;
+    opacity:0;
+    color:#4A3B4D;
+    text-align:justify;
+  }
+
+  .paper .signoff{
+    font-family:'Caveat', cursive;
+    font-size:1.8rem;
+    margin-top:2.2rem;
+    opacity:0;
+  }
+
+  .paper .signature{
+    font-family:'Caveat', cursive;
+    font-weight:600;
+    font-size:2.2rem;
+    line-height:1.4;
+    margin-top:1.4rem;
+    padding-bottom:0.5rem;
+    color:#3A2E3F;
+    opacity:0;
+  }
+
+  .fade-in{ animation:lineIn 0.9s ease forwards; }
+  @keyframes lineIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+  .close-btn{
+    position:absolute;
+    top:calc(20px + env(safe-area-inset-top));
+    right:calc(24px + env(safe-area-inset-right));
+    background:none; border:none;
+    font-size:1.6rem; color:var(--ink);
+    opacity:0.35; cursor:pointer;
+    z-index:11;
+  }
+  .close-btn:hover{ opacity:0.75; }
+
+  .heart-row{ display:flex; gap:10px; margin-top:2.4rem; opacity:0; }
+  .heart-row.fade-in{ animation:lineIn 1s ease forwards; }
+  .heart-row svg{ width:20px; height:20px; fill:var(--blush); }
+
+  @media (max-width:480px){
+    .envelope{ width:200px; height:132px; }
+    .paper .greeting{ font-size:1.6rem; }
+    .paper .line{ font-size:1.3rem; line-height:1.5; }
+    .paper .signoff{ font-size:1.6rem; margin-top:2rem; }
+    .paper .signature{ font-size:1.9rem; margin-top:1.8rem; }
+    #letter{ padding-left:20px; padding-right:20px; }
+    .tap-hint{ font-size:0.72rem; letter-spacing:1.5px; }
+  }
+
+  @media (max-height:700px){
+    .caption{ top:6%; font-size:2.6rem; }
+    .sun{ width:140px; height:140px; margin-left:-70px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="sky">
+  <div class="sun"></div>
+</div>
+
+<div id="scene">
+  <div class="caption">For Lora</div>
+
+  <div id="envelope-wrap">
+    <div class="envelope" id="envelope">
+      <div class="env-shade"></div>
+      <div class="env-body"></div>
+      <div class="env-flap"></div>
+      <div class="seal">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-8-5.4-8-11.5C4 6 6.2 4 9 4c1.6 0 3 .8 3 .8S13.4 4 15 4c2.8 0 5 2 5 5.5C20 15.6 12 21 12 21z"/></svg>
+      </div>
+    </div>
+    <div class="tap-hint">tap to open</div>
+  </div>
+</div>
+
+<button class="close-btn" id="closeBtn" style="display:none;">✕</button>
+
+<div id="letter">
+  <div class="paper">
+    <div class="greeting">Good morning, love.</div>
+
+    <p class="line" data-delay="200">While you were asleep, I was still awake, thinking about how lucky I am that I get to love you!</p>
+    <p class="line" data-delay="1000">I don't say it enough, so here it is: I love you. I love the big things, of course, but somehow I love the little things even more, your sleepy voice, your smile, your laugh, the way you talk, and the way even the most ordinary days feel better just because you're in them.</p>
+    <p class="line" data-delay="1900">And if I'm ever a little quiet or don't have much to say, please don't mistake that for a lack of love or interest. Sometimes there are a thousand things going through my head, and I just don't know how to turn them into words. I know I'm not always the most talkative person, but even in my quiet moments, somehow, most of what's on my mind is you.</p>
+    <p class="line" data-delay="2800">I wish I could be there when you wake up, steal that first sleepy look from your eyes, kiss you good morning, and have iced coffee with you. Until then, I guess this little message will have to do.</p>
+    <p class="line" data-delay="3700">Go have a beautiful morning, my love. And if you randomly smile today for no reason, just know there's a very high chance I'm thinking about you at that exact moment.</p>
+
+    <p class="signoff" data-delay="4800">I love you &#10084;&#65039;</p>
+    <p class="signature" data-delay="5100">Smail</p>
+  </div>
+</div>
+
+<script>
+  const sky = document.getElementById('sky');
+
+  // sun rays
+  for(let i=0;i<8;i++){
+    const r = document.createElement('div');
+    r.className = 'ray';
+    const angle = -35 + i*10;
+    r.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+    r.style.animationDelay = (2 + Math.random()*0.6) + 's';
+    sky.appendChild(r);
+  }
+
+  // birds
+  function birdSVG(){
+    return '<svg viewBox="0 0 18 8"><path d="M0 6 Q4.5 0 9 6 Q13.5 0 18 6"/></svg>';
+  }
+  const birdSpecs = [
+    {top:'20%', left:'20%', delay:'2.4s'},
+    {top:'24%', left:'30%', delay:'2.6s'},
+    {top:'16%', left:'75%', delay:'2.9s'}
+  ];
+  birdSpecs.forEach(b=>{
+    const el = document.createElement('div');
+    el.className='bird';
+    el.innerHTML = birdSVG();
+    el.style.top = b.top;
+    el.style.left = b.left;
+    el.style.animationDelay = b.delay+', '+b.delay;
+    sky.appendChild(el);
+  });
+
+  // Envelope interaction
+  const envelope = document.getElementById('envelope');
+  const envelopeWrap = document.getElementById('envelope-wrap');
+  const letter = document.getElementById('letter');
+  const closeBtn = document.getElementById('closeBtn');
+
+  envelopeWrap.addEventListener('click', () => {
+    envelope.classList.add('open');
+    setTimeout(() => {
+      envelopeWrap.classList.add('hidden');
+      letter.classList.add('visible');
+      closeBtn.style.display = 'block';
+      document.querySelectorAll('.line, .signoff, .heart-row, .signature').forEach(el => {
+        const delay = parseInt(el.getAttribute('data-delay')) || 0;
+        setTimeout(() => el.classList.add('fade-in'), delay);
+      });
+    }, 750);
+  });
+
+  closeBtn.addEventListener('click', () => {
+    letter.classList.remove('visible');
+    closeBtn.style.display = 'none';
+    setTimeout(() => {
+      envelope.classList.remove('open');
+      envelopeWrap.classList.remove('hidden');
+      document.querySelectorAll('.line, .signoff, .heart-row, .signature').forEach(el => el.classList.remove('fade-in'));
+    }, 900);
+  });
+</script>
+
+</body>
+</html>
